@@ -1,0 +1,42 @@
+# Binaries
+fhir-cli
+fhir-cli.exe
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Build output
+dist/
+bin/
+
+# Test files
+*.test
+coverage.out
+coverage.html
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Config files with secrets (keep examples)
+*.pem
+*.key
+!*.example.pem
+!*.example.key
+
+# Private keys directory
+keys/
+
+# Go
+vendor/
+
+# Local config (has credentials)
+.fhir-cli/
