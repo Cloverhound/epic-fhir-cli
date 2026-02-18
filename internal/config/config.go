@@ -26,9 +26,9 @@ type Profile struct {
 }
 
 type TokenCache struct {
-	AccessToken string    `yaml:"access_token"`
-	ExpiresAt   time.Time `yaml:"expires_at"`
-	Scope       string    `yaml:"scope"`
+	AccessToken string    `yaml:"access_token" json:"access_token"`
+	ExpiresAt   time.Time `yaml:"expires_at" json:"expires_at"`
+	Scope       string    `yaml:"scope" json:"scope"`
 }
 
 var (
@@ -124,33 +124,6 @@ func Save(cfg *Config) error {
 	}
 
 	return nil
-}
-
-func SaveTokenCache(profile string, cache *TokenCache) error {
-	if err := EnsureConfigDir(); err != nil {
-		return err
-	}
-
-	data, err := yaml.Marshal(cache)
-	if err != nil {
-		return err
-	}
-
-	return os.WriteFile(GetTokenCachePath(profile), data, 0600)
-}
-
-func LoadTokenCache(profile string) (*TokenCache, error) {
-	data, err := os.ReadFile(GetTokenCachePath(profile))
-	if err != nil {
-		return nil, err
-	}
-
-	var cache TokenCache
-	if err := yaml.Unmarshal(data, &cache); err != nil {
-		return nil, err
-	}
-
-	return &cache, nil
 }
 
 func GetDefaultProfile() Profile {

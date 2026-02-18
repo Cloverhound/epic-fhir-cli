@@ -149,7 +149,7 @@ var authStatusCmd = &cobra.Command{
 			profileName = "default"
 		}
 
-		cache, err := config.LoadTokenCache(profileName)
+		cache, err := auth.LoadTokenFromKeyring(profileName)
 		if err != nil {
 			fmt.Println("Status: Not authenticated")
 			fmt.Println("Run 'fhir-cli auth token' to authenticate")

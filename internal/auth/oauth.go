@@ -33,7 +33,7 @@ func GetAccessToken(profile *config.Profile, forceRefresh bool) (string, error) 
 
 	// Check token cache first
 	if !forceRefresh {
-		cache, err := config.LoadTokenCache(profileName)
+		cache, err := LoadTokenFromKeyring(profileName)
 		if err == nil && cache.ExpiresAt.After(time.Now().Add(5*time.Minute)) {
 			return cache.AccessToken, nil
 		}
@@ -58,7 +58,7 @@ func GetAccessToken(profile *config.Profile, forceRefresh bool) (string, error) 
 		ExpiresAt:   time.Now().Add(time.Duration(tokenResp.ExpiresIn) * time.Second),
 		Scope:       tokenResp.Scope,
 	}
-	if err := config.SaveTokenCache(profileName, cache); err != nil {
+	if err := SaveTokenToKeyring(profileName, cache); err != nil {
 		// Log warning but don't fail
 		fmt.Printf("Warning: failed to cache token: %v\n", err)
 	}
@@ -140,9 +140,13 @@ func exchangeJWTForToken(tokenURL, jwtAssertion string) (*TokenResponse, error) 
 
 
 func ClearTokenCache(profileName string) error {
-	cachePath := config.GetTokenCachePath(profileName)
-	if err := os.Remove(cachePath); err != nil && !os.IsNotExist(err) {
-		return fmt.Errorf("failed to remove token cache: %w", err)
+	if err := DeleteTokenFromKeyring(profileName); err != nil {
+		return err
+	}
+	// Also remove legacy YAML file if it exists
+	legacyPath := config.GetTokenCachePath(profileName)
+	if err := os.Remove(legacyPath); err != nil && !os.IsNotExist(err) {
+		return fmt.Errorf("failed to remove legacy token cache: %w", err)
 	}
 	return nil
 }
