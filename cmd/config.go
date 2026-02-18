@@ -86,7 +86,7 @@ var configInitCmd = &cobra.Command{
 			scopes = defaultScopes
 		}
 
-		// Create configuration
+		// Create fresh configuration
 		cfg := &config.Config{
 			Default: profileName,
 			Profiles: map[string]config.Profile{
@@ -203,26 +203,96 @@ Available keys:
 	},
 }
 
+var addProfileInteractive bool
+
 var configAddProfileCmd = &cobra.Command{
 	Use:   "add-profile <name>",
 	Short: "Add a new profile",
-	Args:  cobra.ExactArgs(1),
+	Long: `Add a new profile to the configuration.
+
+By default, creates a profile with default settings. Use --interactive (-i) to
+launch the setup wizard for the new profile.`,
+	Args: cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		profileName := args[0]
 
 		if config.CurrentConfig == nil {
-			config.CurrentConfig = &config.Config{
-				Profiles: make(map[string]config.Profile),
-			}
+			return fmt.Errorf("no configuration loaded. Run 'fhir-cli config init' first")
 		}
 
 		if _, exists := config.CurrentConfig.Profiles[profileName]; exists {
 			return fmt.Errorf("profile '%s' already exists", profileName)
 		}
 
-		// Start with default profile settings
-		newProfile := config.GetDefaultProfile()
-		newProfile.Name = profileName
+		var newProfile config.Profile
+
+		if addProfileInteractive {
+			reader := bufio.NewReader(os.Stdin)
+
+			fmt.Printf("Setting up profile [%s]\n", profileName)
+			fmt.Println("=============================")
+			fmt.Println()
+
+			fmt.Print("Client ID: ")
+			clientID, _ := reader.ReadString('\n')
+			clientID = strings.TrimSpace(clientID)
+
+			fmt.Println("Private key source (file path or env:VAR_NAME for environment variable)")
+			fmt.Print("Private key [env:FHIR_PRIVATE_KEY]: ")
+			privateKey, _ := reader.ReadString('\n')
+			privateKey = strings.TrimSpace(privateKey)
+			if privateKey == "" {
+				privateKey = "env:FHIR_PRIVATE_KEY"
+			}
+
+			fmt.Print("FHIR version [R4]: ")
+			fhirVersion, _ := reader.ReadString('\n')
+			fhirVersion = strings.TrimSpace(fhirVersion)
+			if fhirVersion == "" {
+				fhirVersion = "R4"
+			}
+
+			defaultURL := "https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4"
+			if fhirVersion == "STU3" {
+				defaultURL = "https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/STU3"
+			}
+			fmt.Printf("FHIR Base URL [%s]: ", defaultURL)
+			baseURL, _ := reader.ReadString('\n')
+			baseURL = strings.TrimSpace(baseURL)
+			if baseURL == "" {
+				baseURL = defaultURL
+			}
+
+			defaultTokenURL := "https://fhir.epic.com/interconnect-fhir-oauth/oauth2/token"
+			fmt.Printf("Token URL [%s]: ", defaultTokenURL)
+			tokenURL, _ := reader.ReadString('\n')
+			tokenURL = strings.TrimSpace(tokenURL)
+			if tokenURL == "" {
+				tokenURL = defaultTokenURL
+			}
+
+			defaultScopes := "system/Patient.read system/Observation.read system/Condition.read system/MedicationRequest.read system/AllergyIntolerance.read system/Procedure.read system/Encounter.read system/DiagnosticReport.read"
+			fmt.Printf("Scopes [%s]: ", defaultScopes)
+			scopes, _ := reader.ReadString('\n')
+			scopes = strings.TrimSpace(scopes)
+			if scopes == "" {
+				scopes = defaultScopes
+			}
+
+			newProfile = config.Profile{
+				Name:         profileName,
+				ClientID:     clientID,
+				PrivateKey:   privateKey,
+				TokenURL:     tokenURL,
+				FHIRBaseURL:  baseURL,
+				FHIRVersion:  fhirVersion,
+				Scopes:       scopes,
+				OutputFormat: "json",
+			}
+		} else {
+			newProfile = config.GetDefaultProfile()
+			newProfile.Name = profileName
+		}
 
 		config.CurrentConfig.Profiles[profileName] = newProfile
 
@@ -234,8 +304,10 @@ var configAddProfileCmd = &cobra.Command{
 			return fmt.Errorf("failed to save configuration: %w", err)
 		}
 
-		fmt.Printf("Added profile [%s]\n", profileName)
-		fmt.Println("Use 'fhir-cli config set <key> <value> -p", profileName, "' to configure it")
+		fmt.Printf("\nAdded profile [%s]\n", profileName)
+		if !addProfileInteractive {
+			fmt.Println("Use 'fhir-cli config set <key> <value> -p", profileName, "' to configure it")
+		}
 		return nil
 	},
 }
@@ -273,4 +345,6 @@ func init() {
 	configCmd.AddCommand(configSetCmd)
 	configCmd.AddCommand(configAddProfileCmd)
 	configCmd.AddCommand(configUseCmd)
+
+	configAddProfileCmd.Flags().BoolVarP(&addProfileInteractive, "interactive", "i", false, "launch interactive setup wizard")
 }

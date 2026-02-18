@@ -62,13 +62,15 @@ func EnsureConfigDir() error {
 	return os.MkdirAll(configDir, 0700)
 }
 
-func Load(profileName string) error {
+// LoadFile reads and parses the config file, populating CurrentConfig.
+// It does not resolve a profile. Returns nil if the file does not exist.
+func LoadFile() error {
 	configPath := GetConfigPath()
 
 	data, err := os.ReadFile(configPath)
 	if err != nil {
 		if os.IsNotExist(err) {
-			return fmt.Errorf("config file not found. Run 'fhir-cli config init' to create one")
+			return nil
 		}
 		return fmt.Errorf("failed to read config: %w", err)
 	}
@@ -79,12 +81,25 @@ func Load(profileName string) error {
 	}
 
 	CurrentConfig = &cfg
+	return nil
+}
 
-	if profileName == "" || profileName == "default" {
-		profileName = cfg.Default
+func Load(profileName string) error {
+	if CurrentConfig == nil {
+		if err := LoadFile(); err != nil {
+			return err
+		}
 	}
 
-	profile, exists := cfg.Profiles[profileName]
+	if CurrentConfig == nil {
+		return fmt.Errorf("config file not found. Run 'fhir-cli config init' to create one")
+	}
+
+	if profileName == "" || profileName == "default" {
+		profileName = CurrentConfig.Default
+	}
+
+	profile, exists := CurrentConfig.Profiles[profileName]
 	if !exists {
 		return fmt.Errorf("profile '%s' not found in config", profileName)
 	}
