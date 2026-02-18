@@ -30,7 +30,7 @@ checksum:
 
 release:
   github:
-    owner: jbogarin
-    name: fhir-cli
+    owner: CloverhoundPS
+    name: epic-fhir-cli
   draft: false
   prerelease: auto
