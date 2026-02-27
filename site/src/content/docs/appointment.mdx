@@ -1,0 +1,104 @@
+---
+title: Appointment
+description: Query scheduled healthcare events, schedules, and slots.
+---
+
+The `appointment` command manages Appointment resources — scheduled healthcare events. This page also covers the related `schedule` and `slot` commands.
+
+## Appointment
+
+**Aliases:** `appt`
+
+### `appointment get <id>`
+
+Fetch a single appointment by ID.
+
+```bash
+fhir-cli appointment get abc123
+```
+
+### `appointment search`
+
+Search for appointments.
+
+```bash
+fhir-cli appointment search --patient e63wRTbPfr1p8UW81d8Seiw3
+fhir-cli appointment search --patient e63wRTbPfr1p8UW81d8Seiw3 --status booked
+fhir-cli appointment search --patient e63wRTbPfr1p8UW81d8Seiw3 --date ge2024-06-01
+fhir-cli appointment search --practitioner ePRKNxR5im16VB5Vr4qRGaw3
+```
+
+| Flag | Description |
+|------|-------------|
+| `--patient` | Patient FHIR ID |
+| `--status` | Status: `booked`, `pending`, `cancelled` |
+| `--date` | Date range |
+| `--practitioner` | Practitioner FHIR ID |
+| `--location` | Location FHIR ID |
+| `--service-type` | Service type |
+| `--count` | Maximum number of results (default: `20`) |
+
+### `appointment list <patient-id>`
+
+List appointments for a patient.
+
+```bash
+fhir-cli appointment list e63wRTbPfr1p8UW81d8Seiw3
+```
+
+| Flag | Description |
+|------|-------------|
+| `--count` | Maximum number of results (default: `20`) |
+
+### `appointment upcoming <patient-id>`
+
+Get upcoming appointments for a patient (pre-sets `status=booked`).
+
+```bash
+fhir-cli appointment upcoming e63wRTbPfr1p8UW81d8Seiw3
+```
+
+| Flag | Description |
+|------|-------------|
+| `--count` | Maximum number of results (default: `10`) |
+
+## Schedule
+
+### `schedule get <id>`
+
+Fetch a schedule by ID.
+
+```bash
+fhir-cli schedule get abc123
+```
+
+### `schedule search`
+
+Search for schedules.
+
+```bash
+fhir-cli schedule search --actor ePRKNxR5im16VB5Vr4qRGaw3
+```
+
+| Flag | Description |
+|------|-------------|
+| `--actor` | Actor (practitioner/location) FHIR ID |
+| `--date` | Date range |
+| `--count` | Maximum number of results (default: `20`) |
+
+## Slot
+
+### `slot search`
+
+Search for available appointment slots.
+
+```bash
+fhir-cli slot search --schedule abc123 --status free
+```
+
+| Flag | Description |
+|------|-------------|
+| `--schedule` | Schedule FHIR ID |
+| `--status` | Status: `free`, `busy` |
+| `--start` | Start time |
+| `--count` | Maximum number of results (default: `50`) |

@@ -1,0 +1,65 @@
+---
+title: Patient
+description: Query patient demographics and administrative information.
+---
+
+The `patient` command manages Patient resources — demographics and administrative information.
+
+## Commands
+
+### `patient get <id>`
+
+Fetch a single patient by FHIR ID.
+
+```bash
+fhir-cli patient get e63wRTbPfr1p8UW81d8Seiw3
+```
+
+### `patient search`
+
+Search for patients. At least one search parameter (excluding `--count`) is required.
+
+```bash
+fhir-cli patient search --family Smith
+fhir-cli patient search --given John --family Smith
+fhir-cli patient search --birthdate 1990-01-15
+fhir-cli patient search --identifier "urn:oid:1.2.3|12345"
+```
+
+| Flag | Description |
+|------|-------------|
+| `--name` | Search by full name |
+| `--family` | Search by family/last name |
+| `--given` | Search by given/first name |
+| `--birthdate` | Search by birth date (YYYY-MM-DD) |
+| `--gender` | Search by gender (`male`, `female`, `other`, `unknown`) |
+| `--identifier` | Search by identifier (`system\|value`) |
+| `--address` | Search by address text |
+| `--address-city` | Search by city |
+| `--address-state` | Search by state |
+| `--address-postalcode` | Search by postal code |
+| `--phone` | Search by phone number |
+| `--email` | Search by email |
+| `--count` | Maximum number of results (default: `10`) |
+
+### `patient everything <id>`
+
+Get all data for a patient using the FHIR `$everything` operation. Returns a Bundle containing all resources that reference the patient.
+
+```bash
+fhir-cli patient everything e63wRTbPfr1p8UW81d8Seiw3
+```
+
+## Table Output
+
+When using `-o table`, patient bundles display:
+
+| Column | Description |
+|--------|-------------|
+| ID | FHIR resource ID |
+| Name | Patient's full name |
+| DOB | Birth date |
+| Gender | Administrative gender |
+| MRN | Medical record number |
+
+Single patients show a field-value layout including address, phone, and email when available.

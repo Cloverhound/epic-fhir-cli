@@ -1,0 +1,36 @@
+---
+title: fhir-cli
+description: A command-line interface for querying Epic FHIR R4 APIs.
+template: splash
+hero:
+  tagline: A powerful CLI for querying Epic FHIR R4 APIs with OAuth2 backend authentication.
+  actions:
+    - text: Get Started
+      link: /epic-fhir-cli/getting-started/
+      icon: right-arrow
+      variant: primary
+    - text: View on GitHub
+      link: https://github.com/CloverhoundPS/epic-fhir-cli
+      icon: external
+---
+
+import { Card, CardGrid } from "@astrojs/starlight/components";
+
+<CardGrid stagger>
+  <Card title="27+ FHIR Resources" icon="list-format">
+    Query patients, observations, conditions, medications, encounters, and many
+    more FHIR R4 resource types with dedicated commands and shortcuts.
+  </Card>
+  <Card title="OAuth2 JWT Authentication" icon="setting">
+    Secure backend authentication using JWT bearer assertions with RS384 signing.
+    Tokens are cached in your OS keyring for safe, seamless reuse.
+  </Card>
+  <Card title="Multiple Output Formats" icon="document">
+    View results as pretty-printed JSON, YAML, or formatted ASCII tables with
+    resource-specific column layouts.
+  </Card>
+  <Card title="Profile Management" icon="random">
+    Configure multiple profiles for different Epic environments — sandbox,
+    staging, production — and switch between them instantly.
+  </Card>
+</CardGrid>

@@ -1,0 +1,115 @@
+---
+title: Epic Sandbox
+description: Set up and test with Epic's public FHIR sandbox.
+---
+
+Epic provides a public sandbox environment for testing FHIR integrations. This is the recommended way to get started with fhir-cli.
+
+## Sandbox URLs
+
+| Setting | URL |
+|---------|-----|
+| FHIR Base URL | `https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4` |
+| Token URL | `https://fhir.epic.com/interconnect-fhir-oauth/oauth2/token` |
+
+## App Registration
+
+1. Go to [fhir.epic.com](https://fhir.epic.com) and create an account
+2. Register a new application
+3. Select **Backend System** as the application type
+4. Upload your public key (see below)
+5. Note your **Client ID** after registration
+
+### Generate a Key Pair
+
+```bash
+# Generate RSA private key
+openssl genrsa -out privatekey.pem 2048
+
+# Extract public key
+openssl rsa -in privatekey.pem -pubout -out publickey.pem
+```
+
+Upload `publickey.pem` to your Epic app registration. Keep `privatekey.pem` secure.
+
+## Configure fhir-cli
+
+Run the interactive setup:
+
+```bash
+fhir-cli config init
+```
+
+Or set values manually:
+
+```bash
+fhir-cli config add-profile sandbox
+fhir-cli config set client_id your-client-id-here
+fhir-cli config set private_key /path/to/privatekey.pem
+fhir-cli config set fhir_base_url https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4
+fhir-cli config set token_url https://fhir.epic.com/interconnect-fhir-oauth/oauth2/token
+fhir-cli config set scopes "system/Patient.read system/Observation.read"
+```
+
+## Test Workflow
+
+### 1. Verify your key loads
+
+```bash
+fhir-cli auth test-key
+```
+
+### 2. Get an access token
+
+```bash
+fhir-cli auth token
+```
+
+### 3. Search for test patients
+
+```bash
+fhir-cli patient search --family Argonaut
+fhir-cli patient search --family Argonaut -o table
+```
+
+### 4. Get a patient's data
+
+```bash
+# Get patient details
+fhir-cli patient get e63wRTbPfr1p8UW81d8Seiw3
+
+# View their conditions
+fhir-cli condition search --patient e63wRTbPfr1p8UW81d8Seiw3
+
+# Check vital signs
+fhir-cli observation vitals e63wRTbPfr1p8UW81d8Seiw3
+
+# List medications
+fhir-cli medication active e63wRTbPfr1p8UW81d8Seiw3
+
+# View all data
+fhir-cli patient everything e63wRTbPfr1p8UW81d8Seiw3
+```
+
+### 5. Check server capabilities
+
+```bash
+fhir-cli resource metadata
+```
+
+## Troubleshooting
+
+If authentication fails against the sandbox:
+
+```bash
+# Debug your configuration
+fhir-cli auth debug
+
+# Check the JWT being generated
+fhir-cli auth show-jwt
+
+# Get verbose output
+fhir-cli auth token --verbose
+```
+
+See [Auth Troubleshooting](/epic-fhir-cli/auth-troubleshooting/) for common issues and solutions.

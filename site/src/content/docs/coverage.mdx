@@ -1,0 +1,104 @@
+---
+title: Coverage
+description: Query insurance, claims, and service requests.
+---
+
+The `coverage` command manages Coverage resources — insurance and payment information. This page also covers ExplanationOfBenefit and ServiceRequest commands.
+
+## Coverage
+
+**Aliases:** `insurance`
+
+### `coverage get <id>`
+
+Fetch a coverage record by ID.
+
+```bash
+fhir-cli coverage get abc123
+```
+
+### `coverage search`
+
+Search for coverage records.
+
+```bash
+fhir-cli coverage search --patient e63wRTbPfr1p8UW81d8Seiw3
+fhir-cli coverage search --patient e63wRTbPfr1p8UW81d8Seiw3 --status active
+```
+
+| Flag | Description |
+|------|-------------|
+| `--patient` | Patient FHIR ID |
+| `--beneficiary` | Beneficiary FHIR ID |
+| `--status` | Status: `active`, `cancelled` |
+| `--type` | Coverage type |
+| `--payor` | Payor organization |
+| `--count` | Maximum number of results (default: `20`) |
+
+### `coverage list <patient-id>`
+
+List coverage records for a patient.
+
+```bash
+fhir-cli coverage list e63wRTbPfr1p8UW81d8Seiw3
+```
+
+| Flag | Description |
+|------|-------------|
+| `--count` | Maximum number of results (default: `20`) |
+
+## ExplanationOfBenefit
+
+**Aliases:** `explanation-of-benefit`
+
+### `eob get <id>`
+
+Fetch an explanation of benefit by ID.
+
+```bash
+fhir-cli eob get abc123
+```
+
+### `eob search`
+
+Search for explanations of benefit.
+
+```bash
+fhir-cli eob search --patient e63wRTbPfr1p8UW81d8Seiw3
+```
+
+| Flag | Description |
+|------|-------------|
+| `--patient` | Patient FHIR ID |
+| `--status` | Status |
+| `--created` | Created date range |
+| `--count` | Maximum number of results (default: `20`) |
+
+## ServiceRequest
+
+**Aliases:** `service-request`, `order`
+
+### `servicerequest get <id>`
+
+Fetch a service request by ID.
+
+```bash
+fhir-cli servicerequest get abc123
+```
+
+### `servicerequest search`
+
+Search for service requests.
+
+```bash
+fhir-cli servicerequest search --patient e63wRTbPfr1p8UW81d8Seiw3
+fhir-cli servicerequest search --patient e63wRTbPfr1p8UW81d8Seiw3 --status active
+```
+
+| Flag | Description |
+|------|-------------|
+| `--patient` | Patient FHIR ID |
+| `--status` | Status: `active`, `completed`, `cancelled` |
+| `--intent` | Intent: `order`, `proposal`, `plan` |
+| `--category` | Category |
+| `--count` | Maximum number of results (default: `20`) |

@@ -1,0 +1,74 @@
+---
+title: Observation
+description: Query measurements, lab results, and vital signs.
+---
+
+The `observation` command manages Observation resources — measurements and simple assertions about a patient.
+
+## Commands
+
+### `observation get <id>`
+
+Fetch a single observation by ID.
+
+```bash
+fhir-cli observation get abc123
+```
+
+### `observation search`
+
+Search for observations.
+
+```bash
+fhir-cli observation search --patient e63wRTbPfr1p8UW81d8Seiw3 --category vital-signs
+fhir-cli observation search --patient e63wRTbPfr1p8UW81d8Seiw3 --category laboratory
+fhir-cli observation search --patient e63wRTbPfr1p8UW81d8Seiw3 --code 8867-4
+fhir-cli observation search --patient e63wRTbPfr1p8UW81d8Seiw3 --date ge2024-01-01
+```
+
+| Flag | Description |
+|------|-------------|
+| `--patient` | Patient FHIR ID (required) |
+| `--category` | Category: `vital-signs`, `laboratory`, `social-history`, `imaging`, `exam` |
+| `--code` | LOINC or other code |
+| `--date` | Date range (e.g., `ge2024-01-01`, `le2024-12-31`) |
+| `--status` | Status: `registered`, `preliminary`, `final`, `amended` |
+| `--count` | Maximum number of results (default: `20`) |
+
+### `observation vitals <patient-id>`
+
+Shortcut to get vital signs for a patient (pre-sets `category=vital-signs`).
+
+```bash
+fhir-cli observation vitals e63wRTbPfr1p8UW81d8Seiw3
+```
+
+| Flag | Description |
+|------|-------------|
+| `--count` | Maximum number of results (default: `20`) |
+| `--date` | Date range |
+
+### `observation labs <patient-id>`
+
+Shortcut to get laboratory results for a patient (pre-sets `category=laboratory`).
+
+```bash
+fhir-cli observation labs e63wRTbPfr1p8UW81d8Seiw3
+```
+
+| Flag | Description |
+|------|-------------|
+| `--count` | Maximum number of results (default: `20`) |
+| `--date` | Date range |
+
+## Table Output
+
+When using `-o table`, observation bundles display:
+
+| Column | Description |
+|--------|-------------|
+| ID | FHIR resource ID |
+| Code | Observation code display text |
+| Value | Measured value with units |
+| Date | Effective date/time |
+| Status | Observation status |

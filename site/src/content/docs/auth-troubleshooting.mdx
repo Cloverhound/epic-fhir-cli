@@ -1,0 +1,126 @@
+---
+title: Auth Troubleshooting
+description: Diagnose and fix common authentication issues.
+---
+
+## Diagnostic Commands
+
+When authentication fails, use these commands to identify the problem:
+
+```bash
+# Check if your private key loads correctly
+fhir-cli auth test-key
+
+# View your configuration and JWT claims
+fhir-cli auth debug
+
+# See the exact JWT that would be sent
+fhir-cli auth show-jwt
+
+# Get verbose output during token exchange
+fhir-cli auth token --verbose
+```
+
+## Common Errors
+
+### "failed to load private key"
+
+Your private key file cannot be read or parsed.
+
+**Causes:**
+- File path is incorrect
+- File is not a valid PEM-encoded RSA private key
+- Environment variable (if using `env:VAR_NAME`) is not set
+
+**Fix:**
+
+```bash
+# Verify the key loads
+fhir-cli auth test-key
+
+# Check the configured path
+fhir-cli config show
+
+# Update the path
+fhir-cli config set private_key /correct/path/to/key.pem
+```
+
+### "token request failed" / HTTP 400
+
+The token endpoint rejected the JWT assertion.
+
+**Causes:**
+- Client ID doesn't match the registered app
+- Wrong token endpoint URL
+- Scopes not authorized for the app
+- JWT `iss` or `sub` claims don't match the client ID
+- Token endpoint expects a different signing algorithm
+
+**Fix:**
+
+```bash
+# Review the full JWT claims
+fhir-cli auth show-jwt
+
+# Check configuration
+fhir-cli auth debug
+
+# Try with verbose output to see the server response
+fhir-cli auth token --verbose
+```
+
+### "token request failed" / HTTP 401 or 403
+
+Authentication succeeded but authorization was denied.
+
+**Causes:**
+- App not approved for the requested scopes
+- App registration is inactive or revoked
+
+**Fix:**
+- Verify app status in the Epic App Orchard or developer portal
+- Check that requested scopes match the app's approved scopes
+
+### Key Format Issues
+
+Epic expects an RSA private key in PKCS#8 or PKCS#1 PEM format.
+
+**Convert a PKCS#1 key to PKCS#8:**
+
+```bash
+openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt \
+  -in privatekey.pem -out privatekey-pkcs8.pem
+```
+
+**Generate a new RSA key pair:**
+
+```bash
+openssl genrsa -out privatekey.pem 2048
+openssl rsa -in privatekey.pem -pubout -out publickey.pem
+```
+
+### Expired or Invalid Cached Token
+
+If you suspect a cached token is stale:
+
+```bash
+# Check current token status
+fhir-cli auth status
+
+# Force a fresh token
+fhir-cli auth token --force
+
+# Or clear the cache entirely
+fhir-cli auth logout
+```
+
+## Environment Variable Keys
+
+When using `env:VAR_NAME` for the private key, the environment variable must contain the full PEM-encoded key including headers:
+
+```bash
+export FHIR_PRIVATE_KEY="-----BEGIN RSA PRIVATE KEY-----
+MIIEowIBAAKCAQEA...
+...
+-----END RSA PRIVATE KEY-----"
+```

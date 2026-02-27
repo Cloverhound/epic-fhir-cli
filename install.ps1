@@ -1,9 +1,9 @@
 # FHIR CLI installer for Windows
-# Usage: irm https://raw.githubusercontent.com/jbogarin/fhir-cli/main/install.ps1 | iex
+# Usage: irm https://raw.githubusercontent.com/CloverhoundPS/epic-fhir-cli/main/install.ps1 | iex
 
 $ErrorActionPreference = "Stop"
 
-$Repo = "jbogarin/fhir-cli"
+$Repo = "CloverhoundPS/epic-fhir-cli"
 $Binary = "fhir-cli.exe"
 $InstallDir = "$env:LOCALAPPDATA\fhir-cli"
 

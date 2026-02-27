@@ -1,0 +1,49 @@
+---
+title: Immunization
+description: Query vaccination records.
+---
+
+The `immunization` command manages Immunization resources — vaccination records.
+
+**Aliases:** `vaccine`, `imm`
+
+## Commands
+
+### `immunization get <id>`
+
+Fetch a single immunization record by ID.
+
+```bash
+fhir-cli immunization get abc123
+```
+
+### `immunization search`
+
+Search for immunization records.
+
+```bash
+fhir-cli immunization search --patient e63wRTbPfr1p8UW81d8Seiw3
+fhir-cli immunization search --patient e63wRTbPfr1p8UW81d8Seiw3 --status completed
+fhir-cli immunization search --patient e63wRTbPfr1p8UW81d8Seiw3 --vaccine-code 208
+fhir-cli immunization search --patient e63wRTbPfr1p8UW81d8Seiw3 --date ge2024-01-01
+```
+
+| Flag | Description |
+|------|-------------|
+| `--patient` | Patient FHIR ID |
+| `--status` | Status: `completed`, `not-done`, `entered-in-error` |
+| `--vaccine-code` | Vaccine code (CVX) |
+| `--date` | Date range |
+| `--count` | Maximum number of results (default: `50`) |
+
+### `immunization list <patient-id>`
+
+List immunizations for a patient.
+
+```bash
+fhir-cli immunization list e63wRTbPfr1p8UW81d8Seiw3
+```
+
+| Flag | Description |
+|------|-------------|
+| `--count` | Maximum number of results (default: `50`) |

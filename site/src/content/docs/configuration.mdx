@@ -1,0 +1,105 @@
+---
+title: Configuration
+description: Manage fhir-cli profiles, credentials, and settings.
+---
+
+Configuration is stored in `~/.fhir-cli/config.yaml`. Each profile contains connection details for a specific Epic environment.
+
+## Config File Structure
+
+```yaml
+default_profile: sandbox
+profiles:
+  sandbox:
+    client_id: your-client-id
+    private_key: /path/to/privatekey.pem
+    fhir_base_url: https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4
+    token_url: https://fhir.epic.com/interconnect-fhir-oauth/oauth2/token
+    fhir_version: R4
+    scopes: system/Patient.read system/Observation.read
+    output_format: json
+  production:
+    client_id: prod-client-id
+    private_key: env:FHIR_PRIVATE_KEY
+    fhir_base_url: https://your-epic.org/FHIR/R4
+    token_url: https://your-epic.org/oauth2/token
+    fhir_version: R4
+    scopes: system/Patient.read
+```
+
+## Commands
+
+### `config init`
+
+Interactive setup wizard for first-time configuration.
+
+```bash
+fhir-cli config init
+```
+
+### `config show`
+
+Display all profiles and their settings.
+
+```bash
+fhir-cli config show
+```
+
+### `config set <key> <value>`
+
+Update a configuration value for the current profile.
+
+```bash
+fhir-cli config set client_id new-client-id
+fhir-cli config set fhir_base_url https://your-epic.org/FHIR/R4
+```
+
+Settable keys: `client_id`, `private_key`, `fhir_base_url`, `token_url`, `fhir_version`, `scopes`, `output_format`.
+
+### `config add-profile <name>`
+
+Add a new profile. Use `-i` for interactive mode.
+
+```bash
+# Add with defaults (empty values)
+fhir-cli config add-profile production
+
+# Interactive setup
+fhir-cli config add-profile production -i
+```
+
+| Flag | Shorthand | Description |
+|------|-----------|-------------|
+| `--interactive` | `-i` | Launch interactive setup wizard |
+
+### `config use <profile>`
+
+Switch the default profile.
+
+```bash
+fhir-cli config use production
+```
+
+## Private Key Options
+
+The `private_key` setting supports two formats:
+
+**File path** — absolute or relative path to a PEM file:
+
+```bash
+fhir-cli config set private_key /path/to/privatekey.pem
+```
+
+**Environment variable** — prefix with `env:` to read the key from an environment variable:
+
+```bash
+fhir-cli config set private_key env:FHIR_PRIVATE_KEY
+```
+
+## Using Profiles
+
+Override the profile for a single command with `--profile` / `-p`:
+
+```bash
+fhir-cli patient search --family Smith -p production
+```

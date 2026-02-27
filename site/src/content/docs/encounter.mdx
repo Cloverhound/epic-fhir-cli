@@ -1,0 +1,60 @@
+---
+title: Encounter
+description: Query healthcare visits and admissions.
+---
+
+The `encounter` command manages Encounter resources — healthcare visits and admissions.
+
+## Commands
+
+### `encounter get <id>`
+
+Fetch a single encounter by ID.
+
+```bash
+fhir-cli encounter get abc123
+```
+
+### `encounter search`
+
+Search for encounters.
+
+```bash
+fhir-cli encounter search --patient e63wRTbPfr1p8UW81d8Seiw3
+fhir-cli encounter search --patient e63wRTbPfr1p8UW81d8Seiw3 --status finished
+fhir-cli encounter search --patient e63wRTbPfr1p8UW81d8Seiw3 --class AMB
+fhir-cli encounter search --patient e63wRTbPfr1p8UW81d8Seiw3 --date ge2024-01-01
+```
+
+| Flag | Description |
+|------|-------------|
+| `--patient` | Patient FHIR ID |
+| `--status` | Status: `planned`, `in-progress`, `finished`, `cancelled` |
+| `--class` | Class: `AMB` (ambulatory), `EMER` (emergency), `IMP` (inpatient), `OBSENC` (observation) |
+| `--date` | Date range |
+| `--type` | Encounter type |
+| `--count` | Maximum number of results (default: `20`) |
+
+### `encounter list <patient-id>`
+
+List encounters for a patient.
+
+```bash
+fhir-cli encounter list e63wRTbPfr1p8UW81d8Seiw3
+```
+
+| Flag | Description |
+|------|-------------|
+| `--count` | Maximum number of results (default: `20`) |
+
+## Table Output
+
+When using `-o table`, encounter bundles display:
+
+| Column | Description |
+|--------|-------------|
+| ID | FHIR resource ID |
+| Type | Encounter type |
+| Status | Current status |
+| Class | Encounter class (AMB, IMP, etc.) |
+| Period | Start and end dates |

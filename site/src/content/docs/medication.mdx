@@ -1,0 +1,107 @@
+---
+title: Medication
+description: Query prescriptions, medication statements, administrations, and dispenses.
+---
+
+The `medication` command manages MedicationRequest resources — prescriptions and medication orders. It also provides subcommands for MedicationStatement, MedicationAdministration, and MedicationDispense resources.
+
+## Commands
+
+### `medication get <id>`
+
+Fetch a single medication request by ID.
+
+```bash
+fhir-cli medication get abc123
+```
+
+### `medication search`
+
+Search for medication requests.
+
+```bash
+fhir-cli medication search --patient e63wRTbPfr1p8UW81d8Seiw3
+fhir-cli medication search --patient e63wRTbPfr1p8UW81d8Seiw3 --status active
+fhir-cli medication search --patient e63wRTbPfr1p8UW81d8Seiw3 --intent order
+```
+
+| Flag | Description |
+|------|-------------|
+| `--patient` | Patient FHIR ID |
+| `--status` | Status: `active`, `on-hold`, `cancelled`, `completed`, `stopped` |
+| `--intent` | Intent: `order`, `proposal`, `plan` |
+| `--authoredon` | Authored date range |
+| `--count` | Maximum number of results (default: `20`) |
+
+### `medication active <patient-id>`
+
+Shortcut to get active medications (pre-sets `status=active`).
+
+```bash
+fhir-cli medication active e63wRTbPfr1p8UW81d8Seiw3
+```
+
+| Flag | Description |
+|------|-------------|
+| `--count` | Maximum number of results (default: `50`) |
+
+## Medication Statement
+
+### `medication statement search`
+
+Search for medication statements.
+
+```bash
+fhir-cli medication statement search --patient e63wRTbPfr1p8UW81d8Seiw3
+```
+
+| Flag | Description |
+|------|-------------|
+| `--patient` | Patient FHIR ID |
+| `--status` | Status |
+| `--count` | Maximum number of results (default: `20`) |
+
+## Medication Administration
+
+### `medication administration search`
+
+Search for medication administrations.
+
+```bash
+fhir-cli medication administration search --patient e63wRTbPfr1p8UW81d8Seiw3
+```
+
+| Flag | Description |
+|------|-------------|
+| `--patient` | Patient FHIR ID |
+| `--status` | Status |
+| `--effective-time` | Effective time range |
+| `--count` | Maximum number of results (default: `20`) |
+
+## Medication Dispense
+
+### `medication dispense search`
+
+Search for medication dispenses.
+
+```bash
+fhir-cli medication dispense search --patient e63wRTbPfr1p8UW81d8Seiw3
+```
+
+| Flag | Description |
+|------|-------------|
+| `--patient` | Patient FHIR ID |
+| `--status` | Status |
+| `--count` | Maximum number of results (default: `20`) |
+
+## Table Output
+
+When using `-o table`, medication request bundles display:
+
+| Column | Description |
+|--------|-------------|
+| ID | FHIR resource ID |
+| Medication | Medication name |
+| Status | Request status |
+| Intent | Order, proposal, or plan |
+| Authored | Date the request was authored |

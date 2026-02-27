@@ -1,0 +1,116 @@
+---
+title: Output Formats
+description: JSON, YAML, and table output formatting options.
+---
+
+fhir-cli supports three output formats, controlled by the `-o` / `--output` flag.
+
+## JSON (default)
+
+Pretty-printed JSON with 2-space indentation.
+
+```bash
+fhir-cli patient get e63wRTbPfr1p8UW81d8Seiw3
+fhir-cli patient get e63wRTbPfr1p8UW81d8Seiw3 -o json
+```
+
+## YAML
+
+YAML format. Accepts both `yaml` and `yml`.
+
+```bash
+fhir-cli patient get e63wRTbPfr1p8UW81d8Seiw3 -o yaml
+```
+
+## Table
+
+Formatted ASCII tables with resource-specific column layouts. Falls back to JSON for unsupported resource types.
+
+```bash
+fhir-cli patient search --family Smith -o table
+fhir-cli observation vitals e63wRTbPfr1p8UW81d8Seiw3 -o table
+```
+
+### Table Columns by Resource Type
+
+**Patient** (single):
+
+| Column | Source |
+|--------|--------|
+| ID | `id` |
+| Name | `name[0]` (given + family) |
+| Birth Date | `birthDate` |
+| Gender | `gender` |
+| MRN | `identifier` (type = MRN) |
+| Address | `address[0]` |
+| Phone | `telecom` (system = phone) |
+| Email | `telecom` (system = email) |
+
+**Patient** (bundle):
+
+| Column | Source |
+|--------|--------|
+| ID | `id` |
+| Name | `name[0]` (given + family) |
+| DOB | `birthDate` |
+| Gender | `gender` |
+| MRN | `identifier` (type = MRN) |
+
+**Observation** (bundle):
+
+| Column | Source |
+|--------|--------|
+| ID | `id` |
+| Code | `code.text` or `code.coding[0].display` |
+| Value | `valueQuantity`, `valueString`, `valueCodeableConcept`, etc. |
+| Date | `effectiveDateTime` or `effectivePeriod` |
+| Status | `status` |
+
+**Condition** (bundle):
+
+| Column | Source |
+|--------|--------|
+| ID | `id` |
+| Condition | `code.text` or `code.coding[0].display` |
+| Clinical Status | `clinicalStatus` |
+| Onset | `onsetDateTime` |
+| Recorded | `recordedDate` |
+
+**MedicationRequest** (bundle):
+
+| Column | Source |
+|--------|--------|
+| ID | `id` |
+| Medication | `medicationCodeableConcept.text` or `medicationReference.display` |
+| Status | `status` |
+| Intent | `intent` |
+| Authored | `authoredOn` |
+
+**Encounter** (bundle):
+
+| Column | Source |
+|--------|--------|
+| ID | `id` |
+| Type | `type` |
+| Status | `status` |
+| Class | `class.code` or `class.display` |
+| Period | `period.start` - `period.end` |
+
+**Generic** (any other resource):
+
+| Column | Source |
+|--------|--------|
+| Resource Type | `resourceType` |
+| ID | `id` |
+| Last Updated | `meta.lastUpdated` |
+| Version ID | `meta.versionId` |
+
+## Setting a Default Format
+
+Set the default output format in your profile:
+
+```bash
+fhir-cli config set output_format table
+```
+
+The `-o` flag always overrides the default.

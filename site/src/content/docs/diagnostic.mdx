@@ -1,0 +1,62 @@
+---
+title: Diagnostic Report
+description: Query lab results, imaging reports, and pathology.
+---
+
+The `diagnostic` command manages DiagnosticReport resources — lab results, imaging reports, and pathology.
+
+**Aliases:** `dx`
+
+## Commands
+
+### `diagnostic get <id>`
+
+Fetch a single diagnostic report by ID.
+
+```bash
+fhir-cli diagnostic get abc123
+```
+
+### `diagnostic search`
+
+Search for diagnostic reports.
+
+```bash
+fhir-cli diagnostic search --patient e63wRTbPfr1p8UW81d8Seiw3
+fhir-cli diagnostic search --patient e63wRTbPfr1p8UW81d8Seiw3 --category LAB
+fhir-cli diagnostic search --patient e63wRTbPfr1p8UW81d8Seiw3 --category RAD
+fhir-cli diagnostic search --patient e63wRTbPfr1p8UW81d8Seiw3 --status final
+```
+
+| Flag | Description |
+|------|-------------|
+| `--patient` | Patient FHIR ID |
+| `--category` | Category: `LAB`, `RAD`, `PATH`, `CARD` |
+| `--code` | Report code |
+| `--status` | Status: `final`, `preliminary`, `registered` |
+| `--date` | Date range |
+| `--count` | Maximum number of results (default: `20`) |
+
+### `diagnostic labs <patient-id>`
+
+Shortcut to get lab reports (pre-sets `category=LAB`).
+
+```bash
+fhir-cli diagnostic labs e63wRTbPfr1p8UW81d8Seiw3
+```
+
+| Flag | Description |
+|------|-------------|
+| `--count` | Maximum number of results (default: `20`) |
+
+### `diagnostic imaging <patient-id>`
+
+Shortcut to get imaging reports (pre-sets `category=RAD`).
+
+```bash
+fhir-cli diagnostic imaging e63wRTbPfr1p8UW81d8Seiw3
+```
+
+| Flag | Description |
+|------|-------------|
+| `--count` | Maximum number of results (default: `20`) |

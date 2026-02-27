@@ -1,0 +1,74 @@
+---
+title: Quick Start
+description: Get up and running with fhir-cli in minutes.
+---
+
+## 1. Initialize Configuration
+
+Run the interactive setup wizard:
+
+```bash
+fhir-cli config init
+```
+
+You'll be prompted for:
+
+| Prompt | Default | Description |
+|--------|---------|-------------|
+| Profile name | `sandbox` | Name for this configuration profile |
+| Client ID | — | Your Epic app's client ID |
+| Private key | `env:FHIR_PRIVATE_KEY` | Path to PEM file or `env:VAR_NAME` |
+| FHIR version | `R4` | FHIR specification version |
+| FHIR base URL | Epic sandbox URL | Your Epic FHIR server base URL |
+| Token URL | Epic sandbox token URL | OAuth2 token endpoint |
+| Scopes | — | Space-separated OAuth2 scopes |
+
+This creates a config file at `~/.fhir-cli/config.yaml`.
+
+## 2. Authenticate
+
+Fetch an access token:
+
+```bash
+fhir-cli auth token
+```
+
+The token is cached securely in your OS keyring and reused automatically until it expires.
+
+## 3. Run Your First Query
+
+Search for a patient:
+
+```bash
+fhir-cli patient search --family Smith
+```
+
+Get a specific patient by ID:
+
+```bash
+fhir-cli patient get e63wRTbPfr1p8UW81d8Seiw3
+```
+
+View results as a table:
+
+```bash
+fhir-cli patient search --family Smith -o table
+```
+
+## Global Flags
+
+These flags are available on every command:
+
+| Flag | Shorthand | Default | Description |
+|------|-----------|---------|-------------|
+| `--config` | | `~/.fhir-cli/config.yaml` | Path to config file |
+| `--output` | `-o` | `json` | Output format: `json`, `table`, `yaml` |
+| `--profile` | `-p` | `default` | Configuration profile to use |
+| `--verbose` | `-v` | `false` | Show HTTP requests and responses |
+
+## What's Next
+
+- [Configuration](/epic-fhir-cli/configuration/) — manage profiles and settings
+- [Authentication](/epic-fhir-cli/authentication/) — understand the auth flow and debug issues
+- [Patient](/epic-fhir-cli/patient/) — explore patient commands in detail
+- [Output Formats](/epic-fhir-cli/output-formats/) — customize how results are displayed

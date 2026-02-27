@@ -1,0 +1,145 @@
+---
+title: Family History
+description: Query family member history, related persons, consent, provenance, and questionnaire responses.
+---
+
+The `familyhistory` command manages FamilyMemberHistory resources — family health history. This page also covers related person, consent, provenance, and questionnaire response commands.
+
+## FamilyMemberHistory
+
+**Aliases:** `family-history`, `fmh`
+
+### `familyhistory get <id>`
+
+Fetch a family member history record by ID.
+
+```bash
+fhir-cli familyhistory get abc123
+```
+
+### `familyhistory search`
+
+Search for family member history records.
+
+```bash
+fhir-cli familyhistory search --patient e63wRTbPfr1p8UW81d8Seiw3
+fhir-cli familyhistory search --patient e63wRTbPfr1p8UW81d8Seiw3 --status completed
+fhir-cli familyhistory search --patient e63wRTbPfr1p8UW81d8Seiw3 --relationship parent
+```
+
+| Flag | Description |
+|------|-------------|
+| `--patient` | Patient FHIR ID |
+| `--status` | Status: `completed`, `partial` |
+| `--relationship` | Relationship to patient |
+| `--code` | Condition code |
+| `--count` | Maximum number of results (default: `20`) |
+
+### `familyhistory list <patient-id>`
+
+List family member history for a patient.
+
+```bash
+fhir-cli familyhistory list e63wRTbPfr1p8UW81d8Seiw3
+```
+
+| Flag | Description |
+|------|-------------|
+| `--count` | Maximum number of results (default: `50`) |
+
+## RelatedPerson
+
+**Aliases:** `related-person`, `contact`
+
+### `relatedperson get <id>`
+
+Fetch a related person by ID.
+
+```bash
+fhir-cli relatedperson get abc123
+```
+
+### `relatedperson search`
+
+Search for related persons.
+
+```bash
+fhir-cli relatedperson search --patient e63wRTbPfr1p8UW81d8Seiw3
+```
+
+| Flag | Description |
+|------|-------------|
+| `--patient` | Patient FHIR ID |
+| `--name` | Search by name |
+| `--relationship` | Relationship type |
+| `--count` | Maximum number of results (default: `20`) |
+
+## Consent
+
+### `consent get <id>`
+
+Fetch a consent record by ID.
+
+```bash
+fhir-cli consent get abc123
+```
+
+### `consent search`
+
+Search for consent records.
+
+```bash
+fhir-cli consent search --patient e63wRTbPfr1p8UW81d8Seiw3
+```
+
+| Flag | Description |
+|------|-------------|
+| `--patient` | Patient FHIR ID |
+| `--status` | Status: `active`, `inactive`, `draft` |
+| `--category` | Category |
+| `--count` | Maximum number of results (default: `20`) |
+
+## Provenance
+
+### `provenance search`
+
+Search for provenance records.
+
+```bash
+fhir-cli provenance search --patient e63wRTbPfr1p8UW81d8Seiw3
+fhir-cli provenance search --target "Patient/e63wRTbPfr1p8UW81d8Seiw3"
+```
+
+| Flag | Description |
+|------|-------------|
+| `--target` | Target resource reference |
+| `--patient` | Patient FHIR ID |
+| `--recorded` | Recorded date range |
+| `--count` | Maximum number of results (default: `20`) |
+
+## QuestionnaireResponse
+
+**Aliases:** `questionnaire-response`, `qr`
+
+### `questionnaireresponse get <id>`
+
+Fetch a questionnaire response by ID.
+
+```bash
+fhir-cli questionnaireresponse get abc123
+```
+
+### `questionnaireresponse search`
+
+Search for questionnaire responses.
+
+```bash
+fhir-cli questionnaireresponse search --patient e63wRTbPfr1p8UW81d8Seiw3
+```
+
+| Flag | Description |
+|------|-------------|
+| `--patient` | Patient FHIR ID |
+| `--status` | Status: `completed`, `in-progress` |
+| `--authored` | Authored date range |
+| `--count` | Maximum number of results (default: `20`) |

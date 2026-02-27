@@ -1,0 +1,108 @@
+---
+title: Practitioner
+description: Query healthcare providers, organizations, and locations.
+---
+
+The `practitioner` command manages Practitioner resources — healthcare providers. This page also covers Organization and Location commands.
+
+## Practitioner
+
+**Aliases:** `provider`
+
+### `practitioner get <id>`
+
+Fetch a practitioner by ID.
+
+```bash
+fhir-cli practitioner get ePRKNxR5im16VB5Vr4qRGaw3
+```
+
+### `practitioner search`
+
+Search for practitioners.
+
+```bash
+fhir-cli practitioner search --name Smith
+fhir-cli practitioner search --family Smith --given John
+fhir-cli practitioner search --identifier "http://hl7.org/fhir/sid/us-npi|1234567890"
+fhir-cli practitioner search --active
+```
+
+| Flag | Description |
+|------|-------------|
+| `--name` | Search by name |
+| `--family` | Search by family name |
+| `--given` | Search by given name |
+| `--identifier` | Search by identifier (`system\|value`) |
+| `--active` | Only active practitioners |
+| `--count` | Maximum number of results (default: `20`) |
+
+### `practitioner role search`
+
+Search for practitioner roles and specialties.
+
+```bash
+fhir-cli practitioner role search --practitioner ePRKNxR5im16VB5Vr4qRGaw3
+fhir-cli practitioner role search --specialty cardiology
+```
+
+| Flag | Description |
+|------|-------------|
+| `--practitioner` | Practitioner FHIR ID |
+| `--specialty` | Specialty code |
+| `--organization` | Organization FHIR ID |
+| `--count` | Maximum number of results (default: `20`) |
+
+## Organization
+
+**Aliases:** `org`
+
+### `organization get <id>`
+
+Fetch an organization by ID.
+
+```bash
+fhir-cli organization get abc123
+```
+
+### `organization search`
+
+Search for organizations.
+
+```bash
+fhir-cli organization search --name "General Hospital"
+```
+
+| Flag | Description |
+|------|-------------|
+| `--name` | Search by name |
+| `--identifier` | Search by identifier |
+| `--type` | Organization type |
+| `--address` | Search by address |
+| `--count` | Maximum number of results (default: `20`) |
+
+## Location
+
+### `location get <id>`
+
+Fetch a location by ID.
+
+```bash
+fhir-cli location get abc123
+```
+
+### `location search`
+
+Search for locations.
+
+```bash
+fhir-cli location search --name "Main Campus"
+```
+
+| Flag | Description |
+|------|-------------|
+| `--name` | Search by name |
+| `--identifier` | Search by identifier |
+| `--type` | Location type |
+| `--address` | Search by address |
+| `--count` | Maximum number of results (default: `20`) |

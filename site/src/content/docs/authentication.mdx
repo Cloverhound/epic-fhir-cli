@@ -1,0 +1,90 @@
+---
+title: Auth Setup
+description: OAuth2 authentication with Epic FHIR servers.
+---
+
+fhir-cli uses OAuth2 backend authentication with JWT bearer assertions (RS384 signing) to obtain access tokens from Epic.
+
+## How It Works
+
+1. A JWT is generated using your client ID and private key
+2. The JWT is sent to the token endpoint as a `client_credentials` grant
+3. Epic returns an access token
+4. The token is cached in your OS keyring and reused until 5 minutes before expiry
+
+## Commands
+
+### `auth token`
+
+Get or refresh an access token.
+
+```bash
+fhir-cli auth token
+```
+
+| Flag | Description |
+|------|-------------|
+| `--force` | Force token refresh even if cached token is valid |
+| `--debug` | Show debug information instead of getting token |
+| `--verbose` / `-v` | Show detailed request and response |
+
+```bash
+# Force a fresh token
+fhir-cli auth token --force
+
+# Debug the auth flow
+fhir-cli auth token --debug
+```
+
+### `auth status`
+
+Check current authentication status — shows token expiry and scopes.
+
+```bash
+fhir-cli auth status
+```
+
+### `auth debug`
+
+Display detailed authentication configuration for troubleshooting. Shows your profile config, JWT claims, token endpoint URL, and private key status.
+
+```bash
+fhir-cli auth debug
+```
+
+### `auth test-key`
+
+Verify that your private key can be loaded and parsed.
+
+```bash
+fhir-cli auth test-key
+```
+
+### `auth show-jwt`
+
+Generate and display the JWT that would be sent to the token endpoint. Useful for manual testing with `curl`.
+
+```bash
+fhir-cli auth show-jwt
+```
+
+The output includes the JWT header and payload claims. You can copy the JWT to test manually:
+
+```bash
+curl -X POST https://fhir.epic.com/interconnect-fhir-oauth/oauth2/token \
+  -d "grant_type=client_credentials" \
+  -d "client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer" \
+  -d "client_assertion=<paste-jwt-here>"
+```
+
+### `auth logout`
+
+Clear the cached token for the current profile.
+
+```bash
+fhir-cli auth logout
+```
+
+## Token Caching
+
+Tokens are stored securely in your operating system's keyring (macOS Keychain, Windows Credential Manager, Linux Secret Service). They are automatically reused until 5 minutes before expiry, at which point a new token is fetched.

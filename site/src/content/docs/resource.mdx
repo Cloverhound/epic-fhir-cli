@@ -1,0 +1,101 @@
+---
+title: Generic Resource Commands
+description: Query any FHIR resource type, view server metadata, and run operations.
+---
+
+The `resource` command provides generic operations that work with any FHIR resource type. Use it for resources that don't have a dedicated command.
+
+## Commands
+
+### `resource get <resource-type> <id>`
+
+Fetch any resource by type and ID.
+
+```bash
+fhir-cli resource get Patient e63wRTbPfr1p8UW81d8Seiw3
+fhir-cli resource get Device abc123
+fhir-cli resource get Specimen xyz789
+```
+
+### `resource search <resource-type> [param=value...]`
+
+Search any resource type with arbitrary parameters.
+
+```bash
+fhir-cli resource search Patient family=Smith
+fhir-cli resource search Observation patient=e63wRTbPfr1p8UW81d8Seiw3 category=vital-signs
+fhir-cli resource search Condition patient=e63wRTbPfr1p8UW81d8Seiw3 clinical-status=active
+```
+
+| Flag | Description |
+|------|-------------|
+| `--count` | Maximum number of results (default: `10`) |
+
+### `resource list`
+
+List all supported FHIR resource types.
+
+```bash
+fhir-cli resource list
+```
+
+### `resource metadata`
+
+Retrieve the CapabilityStatement from the FHIR server. Shows what the server supports.
+
+```bash
+fhir-cli resource metadata
+```
+
+### `resource operation <operation-name> [param=value...]`
+
+Execute a FHIR operation.
+
+```bash
+fhir-cli resource operation everything --resource-type Patient --id e63wRTbPfr1p8UW81d8Seiw3
+fhir-cli resource operation validate-code system=http://loinc.org code=8867-4
+```
+
+| Flag | Description |
+|------|-------------|
+| `--resource-type` | Resource type for the operation |
+| `--id` | Resource ID for instance-level operations |
+
+## Supported Resource Types
+
+| Resource Type | Description |
+|---------------|-------------|
+| `AllergyIntolerance` | Allergy or intolerance information |
+| `Appointment` | A booking of a healthcare event |
+| `Binary` | Raw document content |
+| `CarePlan` | Healthcare plan for a patient |
+| `CareTeam` | Team of practitioners caring for a patient |
+| `Condition` | Problems, diagnoses, and health concerns |
+| `Consent` | Patient privacy preferences |
+| `Coverage` | Insurance or payment information |
+| `DiagnosticReport` | Diagnostic report findings and interpretation |
+| `DocumentReference` | Reference to a clinical document |
+| `Encounter` | Patient-provider interaction |
+| `ExplanationOfBenefit` | Claim adjudication results |
+| `FamilyMemberHistory` | Family health history |
+| `Goal` | Desired health objectives |
+| `Immunization` | Immunization event information |
+| `Location` | Physical place details |
+| `MedicationAdministration` | Medication administration event |
+| `MedicationDispense` | Medication dispensing event |
+| `MedicationRequest` | Prescription or medication order |
+| `MedicationStatement` | Record of medication use |
+| `NutritionOrder` | Nutrition-related orders |
+| `Observation` | Measurements and assertions |
+| `Organization` | Healthcare organization |
+| `Patient` | Patient demographics |
+| `Practitioner` | Healthcare provider |
+| `PractitionerRole` | Provider roles and specialties |
+| `Procedure` | Actions performed on a patient |
+| `Provenance` | Audit trail and data lineage |
+| `QuestionnaireResponse` | Completed questionnaire answers |
+| `RelatedPerson` | Patient contacts and relationships |
+| `Schedule` | Provider availability |
+| `ServiceRequest` | Orders and referrals |
+| `Slot` | Available appointment slots |
+| `Specimen` | Sample for analysis |

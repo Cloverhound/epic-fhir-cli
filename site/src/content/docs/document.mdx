@@ -1,0 +1,60 @@
+---
+title: Document
+description: Query clinical documents and binary content.
+---
+
+The `document` command manages DocumentReference resources — clinical documents. This page also covers the `binary` command for raw document content.
+
+## DocumentReference
+
+**Aliases:** `doc`
+
+### `document get <id>`
+
+Fetch a single document reference by ID.
+
+```bash
+fhir-cli document get abc123
+```
+
+### `document search`
+
+Search for document references.
+
+```bash
+fhir-cli document search --patient e63wRTbPfr1p8UW81d8Seiw3
+fhir-cli document search --patient e63wRTbPfr1p8UW81d8Seiw3 --status current
+fhir-cli document search --patient e63wRTbPfr1p8UW81d8Seiw3 --type 34133-9
+```
+
+| Flag | Description |
+|------|-------------|
+| `--patient` | Patient FHIR ID |
+| `--status` | Status: `current`, `superseded`, `entered-in-error` |
+| `--type` | Document type (LOINC code) |
+| `--category` | Document category |
+| `--date` | Document date range |
+| `--period` | Period covered by document |
+| `--count` | Maximum number of results (default: `20`) |
+
+### `document list <patient-id>`
+
+List documents for a patient.
+
+```bash
+fhir-cli document list e63wRTbPfr1p8UW81d8Seiw3
+```
+
+| Flag | Description |
+|------|-------------|
+| `--count` | Maximum number of results (default: `20`) |
+
+## Binary
+
+### `binary get <id>`
+
+Get raw binary content by ID. Used to retrieve the actual document content referenced by a DocumentReference.
+
+```bash
+fhir-cli binary get abc123
+```

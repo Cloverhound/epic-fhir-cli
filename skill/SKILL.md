@@ -19,24 +19,24 @@ fhir-cli
 
 Install via the one-liner:
 ```bash
-curl -fsSL https://raw.githubusercontent.com/jbogarin/fhir-cli/main/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/CloverhoundPS/epic-fhir-cli/main/install.sh | sh
 ```
 
 On Windows (PowerShell):
 ```powershell
-irm https://raw.githubusercontent.com/jbogarin/fhir-cli/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/CloverhoundPS/epic-fhir-cli/main/install.ps1 | iex
 ```
 
 Or install from source:
 ```bash
-git clone https://github.com/jbogarin/fhir-cli.git
-cd fhir-cli
+git clone https://github.com/CloverhoundPS/epic-fhir-cli.git
+cd epic-fhir-cli
 make install
 ```
 
 ## Authentication
 
-The CLI uses OAuth2 backend authentication with RS384 JWT assertions. Tokens are cached per profile at `~/.fhir-cli/token_<profile>.yaml` and reused until 5 minutes before expiry.
+The CLI uses OAuth2 backend authentication with RS384 JWT assertions. Tokens are stored securely in the OS keyring (macOS Keychain, Windows Credential Manager, Linux Secret Service/D-Bus) and reused until 5 minutes before expiry.
 
 ### Configuration
 
@@ -414,7 +414,7 @@ fhir-cli version    # Print version number
 - **Identifiers**: Use the format `system|value`, e.g., `--identifier "MRN|12345"`.
 - **Scopes**: The OAuth2 scopes in your profile determine which resources you can access. Add scopes like `system/Immunization.read` to access additional resources.
 - **Sandbox**: Epic's public sandbox at `https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4` has limited test data. Register at https://fhir.epic.com for credentials.
-- **Token caching**: Tokens are automatically cached and reused. Use `fhir-cli auth token --force` to force a refresh.
+- **Token caching**: Tokens are securely stored in the OS keyring and automatically reused. Use `fhir-cli auth token --force` to force a refresh, or `fhir-cli auth logout` to clear stored tokens from the keyring.
 
 ## Output Handling
 

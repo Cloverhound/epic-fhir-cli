@@ -1,0 +1,50 @@
+---
+title: Allergy
+description: Query allergy and intolerance records.
+---
+
+The `allergy` command manages AllergyIntolerance resources — allergies and adverse reactions.
+
+**Aliases:** `allergies`
+
+## Commands
+
+### `allergy get <id>`
+
+Fetch a single allergy record by ID.
+
+```bash
+fhir-cli allergy get abc123
+```
+
+### `allergy search`
+
+Search for allergy records.
+
+```bash
+fhir-cli allergy search --patient e63wRTbPfr1p8UW81d8Seiw3
+fhir-cli allergy search --patient e63wRTbPfr1p8UW81d8Seiw3 --clinical-status active
+fhir-cli allergy search --patient e63wRTbPfr1p8UW81d8Seiw3 --criticality high
+fhir-cli allergy search --patient e63wRTbPfr1p8UW81d8Seiw3 --category medication
+```
+
+| Flag | Description |
+|------|-------------|
+| `--patient` | Patient FHIR ID |
+| `--clinical-status` | Clinical status: `active`, `inactive`, `resolved` |
+| `--criticality` | Criticality: `low`, `high`, `unable-to-assess` |
+| `--type` | Type: `allergy`, `intolerance` |
+| `--category` | Category: `food`, `medication`, `environment`, `biologic` |
+| `--count` | Maximum number of results (default: `20`) |
+
+### `allergy list <patient-id>`
+
+List all allergies for a patient.
+
+```bash
+fhir-cli allergy list e63wRTbPfr1p8UW81d8Seiw3
+```
+
+| Flag | Description |
+|------|-------------|
+| `--count` | Maximum number of results (default: `50`) |

@@ -1,0 +1,81 @@
+---
+title: Care Plan
+description: Query care plans, care teams, and goals.
+---
+
+The `careplan` command manages CarePlan resources — healthcare plans for patients. This page also covers the related `careteam` and `goal` commands.
+
+## CarePlan
+
+**Aliases:** `care-plan`
+
+### `careplan get <id>`
+
+Fetch a single care plan by ID.
+
+```bash
+fhir-cli careplan get abc123
+```
+
+### `careplan search`
+
+Search for care plans.
+
+```bash
+fhir-cli careplan search --patient e63wRTbPfr1p8UW81d8Seiw3
+fhir-cli careplan search --patient e63wRTbPfr1p8UW81d8Seiw3 --status active
+```
+
+| Flag | Description |
+|------|-------------|
+| `--patient` | Patient FHIR ID |
+| `--status` | Status: `active`, `completed`, `draft` |
+| `--category` | Category |
+| `--date` | Date range |
+| `--count` | Maximum number of results (default: `20`) |
+
+### `careplan list <patient-id>`
+
+List care plans for a patient.
+
+```bash
+fhir-cli careplan list e63wRTbPfr1p8UW81d8Seiw3
+```
+
+| Flag | Description |
+|------|-------------|
+| `--count` | Maximum number of results (default: `20`) |
+
+## CareTeam
+
+**Aliases:** `care-team`
+
+### `careteam search`
+
+Search for care teams.
+
+```bash
+fhir-cli careteam search --patient e63wRTbPfr1p8UW81d8Seiw3
+```
+
+| Flag | Description |
+|------|-------------|
+| `--patient` | Patient FHIR ID |
+| `--status` | Status |
+| `--count` | Maximum number of results (default: `20`) |
+
+## Goal
+
+### `goal search`
+
+Search for goals.
+
+```bash
+fhir-cli goal search --patient e63wRTbPfr1p8UW81d8Seiw3
+```
+
+| Flag | Description |
+|------|-------------|
+| `--patient` | Patient FHIR ID |
+| `--lifecycle-status` | Lifecycle status |
+| `--count` | Maximum number of results (default: `20`) |
