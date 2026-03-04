@@ -8,7 +8,7 @@ description: Install fhir-cli on macOS, Linux, or Windows.
 ### macOS / Linux
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/CloverhoundPS/epic-fhir-cli/main/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/Cloverhound/epic-fhir-cli/main/install.sh | sh
 ```
 
 This downloads the latest release for your platform, extracts it to `~/.local/bin`, and adds it to your PATH if needed.
@@ -16,14 +16,14 @@ This downloads the latest release for your platform, extracts it to `~/.local/bi
 ### Windows (PowerShell)
 
 ```powershell
-irm https://raw.githubusercontent.com/CloverhoundPS/epic-fhir-cli/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/Cloverhound/epic-fhir-cli/main/install.ps1 | iex
 ```
 
 Installs to `%LOCALAPPDATA%\fhir-cli` and adds it to your user PATH.
 
 ## Manual Download
 
-Download the appropriate archive from the [GitHub Releases](https://github.com/CloverhoundPS/epic-fhir-cli/releases) page.
+Download the appropriate archive from the [GitHub Releases](https://github.com/Cloverhound/epic-fhir-cli/releases) page.
 
 | Platform      | Architecture | File                                    |
 |---------------|--------------|-----------------------------------------|
@@ -41,7 +41,7 @@ Extract the archive and place the `fhir-cli` binary somewhere on your PATH.
 Requires [Go 1.21+](https://go.dev/dl/).
 
 ```bash
-git clone https://github.com/CloverhoundPS/epic-fhir-cli.git
+git clone https://github.com/Cloverhound/epic-fhir-cli.git
 cd epic-fhir-cli
 make build
 ```

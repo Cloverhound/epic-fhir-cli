@@ -9,8 +9,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/jbogarin/fhir-cli/internal/auth"
-	"github.com/jbogarin/fhir-cli/internal/config"
+	"github.com/Cloverhound/epic-fhir-cli/internal/auth"
+	"github.com/Cloverhound/epic-fhir-cli/internal/config"
 )
 
 type Client struct {

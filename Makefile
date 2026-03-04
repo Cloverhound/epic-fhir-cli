@@ -4,7 +4,7 @@
 BINARY_NAME=fhir-cli
 VERSION=$(shell git describe --tags --always --dirty 2>/dev/null || echo "dev")
 BUILD_DATE=$(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
-LDFLAGS=-ldflags "-X github.com/jbogarin/fhir-cli/cmd.Version=$(VERSION) -X github.com/jbogarin/fhir-cli/cmd.BuildDate=$(BUILD_DATE)"
+LDFLAGS=-ldflags "-X github.com/Cloverhound/epic-fhir-cli/cmd.Version=$(VERSION) -X github.com/Cloverhound/epic-fhir-cli/cmd.BuildDate=$(BUILD_DATE)"
 
 # Go commands
 GO=go

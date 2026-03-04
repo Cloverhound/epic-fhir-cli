@@ -1,185 +1,113 @@
-# fhir-cli
+# Epic FHIR CLI
 
-A command-line interface for querying Epic's FHIR R4 APIs.
+A command-line tool for querying Epic's FHIR R4 APIs using OAuth2 backend authentication.
 
-## Features
+## Install
 
-- **OAuth2 Backend Authentication**: JWT-based authentication using RS384 signing
-- **All FHIR R4 Resources**: Support for Patient, Observation, Condition, MedicationRequest, and 25+ more resources
-- **Multiple Output Formats**: JSON, YAML, and formatted tables
-- **Profile Management**: Multiple configuration profiles for different endpoints
-- **Token Caching**: Automatic token caching and refresh
-
-## Installation
-
-### From Source
-
+**macOS / Linux:**
 ```bash
-git clone https://github.com/jbogarin/fhir-cli.git
-cd fhir-cli
-make build
+curl -fsSL https://raw.githubusercontent.com/Cloverhound/epic-fhir-cli/main/install.sh | sh
 ```
 
-### Install to GOPATH
+**Windows (PowerShell):**
+```powershell
+irm https://raw.githubusercontent.com/Cloverhound/epic-fhir-cli/main/install.ps1 | iex
+```
+
+Or download from [Releases](https://github.com/Cloverhound/epic-fhir-cli/releases).
+
+## Update
 
 ```bash
-make install
+fhir-cli update
 ```
 
 ## Quick Start
 
-### 1. Configure credentials
-
 ```bash
+# Interactive setup (creates ~/.fhir-cli/config.yaml)
 fhir-cli config init
-```
 
-This will prompt you for:
-- Profile name (default: sandbox)
-- Client ID (from Epic app registration)
-- Private key source (file path or environment variable)
-- FHIR Base URL
-- Token URL
-- Scopes
-
-### 2. Verify authentication
-
-```bash
+# Verify authentication
 fhir-cli auth token
-```
 
-### 3. Query resources
-
-```bash
 # Search for patients
-fhir-cli patient search --name "Smith" -o table
+fhir-cli patient search --family "Smith" -o table
 
-# Get patient by ID
+# Get a patient by ID
 fhir-cli patient get abc123
 
 # Get observations for a patient
 fhir-cli observation search --patient abc123 --category vital-signs
 
-# Get active medications
+# Active medications
 fhir-cli medication active abc123 -o table
+
+# Different output formats
+fhir-cli patient search --family "Smith" -o json
+fhir-cli patient search --family "Smith" -o yaml
+fhir-cli patient search --family "Smith" -o table
 ```
 
-## Usage
+## FHIR Resources
 
-### Global Flags
+30+ FHIR R4 resource types supported:
+
+| Command | Description |
+|---------|-------------|
+| `patient` | Patient demographics, search, $everything |
+| `observation` | Observations, vitals, lab results |
+| `condition` | Conditions, active problems, problem list |
+| `medication` | MedicationRequest, Statement, Administration, Dispense |
+| `encounter` | Encounters (inpatient, outpatient) |
+| `procedure` | Procedures |
+| `allergy` | AllergyIntolerance |
+| `diagnostic` | DiagnosticReport (labs, imaging) |
+| `document` | DocumentReference, Binary |
+| `immunization` | Immunizations |
+| `appointment` | Appointments, Schedules, Slots |
+| `careplan` | CarePlan, CareTeam, Goal |
+| `coverage` | Coverage, ExplanationOfBenefit, ServiceRequest |
+| `practitioner` | Practitioner, PractitionerRole, Organization, Location |
+| `familyhistory` | FamilyMemberHistory, RelatedPerson, Consent, Provenance, QuestionnaireResponse |
+| `resource` | Generic FHIR resource operations, metadata |
+
+## Authentication
+
+- **OAuth2 backend auth** — RS384 JWT assertions signed with your private key
+- **Token caching** — tokens stored securely in OS keyring (macOS Keychain / Linux Secret Service / Windows Credential Manager) and reused until 5 minutes before expiry
+- **Multi-profile** — configure multiple environments (sandbox, staging, production) and switch between them
+- **Private key sources** — file path (`/path/to/key.pem`) or environment variable (`env:FHIR_PRIVATE_KEY`)
+
+```bash
+fhir-cli config init                # Interactive setup
+fhir-cli config show                # Show current config
+fhir-cli config add-profile prod    # Add a new profile
+fhir-cli config use prod            # Switch default profile
+fhir-cli auth token                 # Get/refresh access token
+fhir-cli auth status                # Check authentication status
+fhir-cli auth logout                # Clear cached tokens
+fhir-cli auth debug                 # Debug auth configuration
+```
+
+## Output Formats
+
+Control output with `-o`:
+
+| Format | Description |
+|--------|-------------|
+| `json` | Pretty-printed JSON (default) |
+| `table` | ASCII table |
+| `yaml` | YAML |
+
+## Global Flags
 
 | Flag | Description |
 |------|-------------|
 | `-o, --output` | Output format: json, table, yaml (default: json) |
 | `-p, --profile` | Configuration profile to use (default: default) |
+| `-v, --verbose` | Verbose output (show HTTP requests/responses) |
 | `--config` | Custom config file path |
-
-### Commands
-
-#### Configuration
-
-```bash
-fhir-cli config init          # Interactive setup
-fhir-cli config show          # Show current config
-fhir-cli config set <key> <value>  # Set config value
-fhir-cli config add-profile <name> # Add new profile
-fhir-cli config use <profile>      # Set default profile
-```
-
-#### Authentication
-
-```bash
-fhir-cli auth token           # Get/refresh access token
-fhir-cli auth status          # Check authentication status
-fhir-cli auth logout          # Clear cached tokens
-```
-
-#### Resources
-
-Each resource supports `get`, `search`, and often `list` commands:
-
-```bash
-# Patient
-fhir-cli patient get <id>
-fhir-cli patient search --name "Smith" --birthdate 1980-01-15
-fhir-cli patient everything <id>
-
-# Observation
-fhir-cli observation get <id>
-fhir-cli observation search --patient <id> --category vital-signs
-fhir-cli observation vitals <patient-id>
-fhir-cli observation labs <patient-id>
-
-# Condition
-fhir-cli condition get <id>
-fhir-cli condition search --patient <id> --clinical-status active
-fhir-cli condition active <patient-id>
-fhir-cli condition problems <patient-id>
-
-# Medication
-fhir-cli medication get <id>
-fhir-cli medication search --patient <id> --status active
-fhir-cli medication active <patient-id>
-
-# Allergy
-fhir-cli allergy list <patient-id>
-fhir-cli allergy search --patient <id> --criticality high
-
-# Encounter
-fhir-cli encounter list <patient-id>
-fhir-cli encounter search --patient <id> --status finished
-
-# And many more...
-```
-
-#### Generic Resource Access
-
-```bash
-# Get any resource by type and ID
-fhir-cli resource get <ResourceType> <id>
-
-# Search any resource
-fhir-cli resource search <ResourceType> param=value
-
-# Get server metadata
-fhir-cli resource metadata
-
-# List supported resources
-fhir-cli resource list
-```
-
-## Supported Resources
-
-| Resource | Commands |
-|----------|----------|
-| Patient | get, search, everything |
-| Observation | get, search, vitals, labs |
-| Condition | get, search, active, problems |
-| MedicationRequest | get, search, active |
-| AllergyIntolerance | get, search, list |
-| Procedure | get, search, list |
-| DiagnosticReport | get, search, labs, imaging |
-| Encounter | get, search, list |
-| Immunization | get, search, list |
-| CarePlan | get, search, list |
-| CareTeam | search |
-| Goal | search |
-| DocumentReference | get, search, list |
-| Practitioner | get, search |
-| PractitionerRole | search |
-| Organization | get, search |
-| Location | get, search |
-| Appointment | get, search, list, upcoming |
-| Schedule | get, search |
-| Slot | search |
-| Coverage | get, search, list |
-| ExplanationOfBenefit | get, search |
-| ServiceRequest | get, search |
-| FamilyMemberHistory | get, search, list |
-| RelatedPerson | get, search |
-| Consent | get, search |
-| Provenance | search |
-| QuestionnaireResponse | get, search |
 
 ## Configuration
 
@@ -191,71 +119,97 @@ profiles:
   sandbox:
     name: sandbox
     client_id: your-client-id
-    private_key: env:FHIR_PRIVATE_KEY  # Read from environment variable
+    private_key: env:FHIR_PRIVATE_KEY
     token_url: https://fhir.epic.com/interconnect-fhir-oauth/oauth2/token
     fhir_base_url: https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4
     fhir_version: R4
     scopes: system/Patient.read system/Observation.read
     output_format: json
-
-  production:
-    name: production
-    client_id: prod-client-id
-    private_key: env:FHIR_PROD_PRIVATE_KEY
-    token_url: https://epic.hospital.org/oauth2/token
-    fhir_base_url: https://epic.hospital.org/api/FHIR/R4
-    fhir_version: R4
-    scopes: system/Patient.read system/Observation.read
 ```
 
-### Private Key Configuration
+The `private_key` field supports file paths (`/path/to/key.pem`, `~/key.pem`) or environment variables (`env:FHIR_PRIVATE_KEY`).
 
-The `private_key` field supports two formats:
+## Coding Agent Skill
 
-| Format | Example | Description |
-|--------|---------|-------------|
-| Environment variable | `env:FHIR_PRIVATE_KEY` | Reads PEM-encoded key from the specified env var |
-| File path | `/path/to/key.pem` | Reads key from file (supports `~` expansion) |
+The Epic FHIR CLI includes a [skill](https://agentskills.io) that enables AI coding agents to query and manage your Epic FHIR environment. It works with any agent that supports the skills standard — [Claude Code](https://claude.com/claude-code), [OpenAI Codex](https://openai.com/codex/), [Cursor](https://cursor.com), and others.
 
-**Using environment variables (recommended for production):**
+### Setup
+
+1. Install the Epic FHIR CLI (see [Install](#install))
+2. Configure: `fhir-cli config init`
+3. Download the skill into the correct folder for your coding agent:
+
+#### Claude Code
+
+**macOS / Linux:**
+```bash
+mkdir -p ~/.claude/skills/epic-fhir-cli
+curl -fsSL https://raw.githubusercontent.com/Cloverhound/epic-fhir-cli/main/skill/SKILL.md \
+  -o ~/.claude/skills/epic-fhir-cli/SKILL.md
+```
+
+**Windows (PowerShell):**
+```powershell
+New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.claude\skills\epic-fhir-cli"
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Cloverhound/epic-fhir-cli/main/skill/SKILL.md" `
+  -OutFile "$env:USERPROFILE\.claude\skills\epic-fhir-cli\SKILL.md"
+```
+
+#### OpenAI Codex
+
+**macOS / Linux:**
+```bash
+mkdir -p ~/.agents/skills/epic-fhir-cli
+curl -fsSL https://raw.githubusercontent.com/Cloverhound/epic-fhir-cli/main/skill/SKILL.md \
+  -o ~/.agents/skills/epic-fhir-cli/SKILL.md
+```
+
+**Windows (PowerShell):**
+```powershell
+New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.agents\skills\epic-fhir-cli"
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Cloverhound/epic-fhir-cli/main/skill/SKILL.md" `
+  -OutFile "$env:USERPROFILE\.agents\skills\epic-fhir-cli\SKILL.md"
+```
+
+#### Cursor
+
+**macOS / Linux:**
+```bash
+mkdir -p ~/.cursor/skills/epic-fhir-cli
+curl -fsSL https://raw.githubusercontent.com/Cloverhound/epic-fhir-cli/main/skill/SKILL.md \
+  -o ~/.cursor/skills/epic-fhir-cli/SKILL.md
+```
+
+**Windows (PowerShell):**
+```powershell
+New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.cursor\skills\epic-fhir-cli"
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Cloverhound/epic-fhir-cli/main/skill/SKILL.md" `
+  -OutFile "$env:USERPROFILE\.cursor\skills\epic-fhir-cli\SKILL.md"
+```
+
+> These commands install the skill globally (user-level). You can also install per-project by placing the `epic-fhir-cli/SKILL.md` folder inside your project's `.claude/skills/`, `.agents/skills/`, or `.cursor/skills/` directory instead.
+
+4. If the `fhir-cli` binary is not in your `$PATH`, ask your coding agent to update the binary path in the skill file.
+
+### Example Prompts
+
+```
+/epic-fhir-cli search for patient Smith and show their active conditions
+
+/epic-fhir-cli get all vital signs for patient abc123 in table format
+
+/epic-fhir-cli check auth status and list all available resource types
+```
+
+## Development
 
 ```bash
-# Set the private key in your environment
-export FHIR_PRIVATE_KEY="-----BEGIN RSA PRIVATE KEY-----
-MIIEpAIBAAKCAQEA...
------END RSA PRIVATE KEY-----"
-
-# Or load from a file into the env var
-export FHIR_PRIVATE_KEY=$(cat /secure/path/to/key.pem)
-
-# Configure the CLI to use the env var
-fhir-cli config set private_key "env:FHIR_PRIVATE_KEY"
+make build      # Build binary
+make test       # Run tests
+make lint       # Run linters
+make fmt        # Format code
+make build-all  # Cross-compile for all platforms
 ```
-
-### Multiple Environments
-
-```bash
-# Add profiles for different environments
-fhir-cli config add-profile staging
-fhir-cli config set client_id "staging-client" -p staging
-fhir-cli config set private_key "env:FHIR_STAGING_KEY" -p staging
-fhir-cli config set fhir_base_url "https://staging.hospital.org/api/FHIR/R4" -p staging
-
-# Switch default environment
-fhir-cli config use staging
-
-# Or use -p flag for one-off commands
-fhir-cli patient search --name Smith -p production
-```
-
-## Epic Sandbox
-
-For testing, use Epic's sandbox endpoints:
-
-| Version | Base URL |
-|---------|----------|
-| R4 | `https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4` |
-| STU3 | `https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/STU3` |
 
 ## License
 

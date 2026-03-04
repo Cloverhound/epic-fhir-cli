@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/jbogarin/fhir-cli/internal/auth"
-	"github.com/jbogarin/fhir-cli/internal/config"
-	"github.com/jbogarin/fhir-cli/internal/output"
+	"github.com/Cloverhound/epic-fhir-cli/internal/auth"
+	"github.com/Cloverhound/epic-fhir-cli/internal/config"
+	"github.com/Cloverhound/epic-fhir-cli/internal/output"
 	"github.com/spf13/cobra"
 )
 

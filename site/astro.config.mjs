@@ -11,7 +11,7 @@ export default defineConfig({
         {
           icon: "github",
           label: "GitHub",
-          href: "https://github.com/CloverhoundPS/epic-fhir-cli",
+          href: "https://github.com/Cloverhound/epic-fhir-cli",
         },
       ],
       sidebar: [

@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/jbogarin/fhir-cli/internal/config"
+	"github.com/Cloverhound/epic-fhir-cli/internal/config"
 	"github.com/spf13/cobra"
 )
 

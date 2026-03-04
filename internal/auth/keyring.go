@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/jbogarin/fhir-cli/internal/config"
+	"github.com/Cloverhound/epic-fhir-cli/internal/config"
 	"github.com/zalando/go-keyring"
 	"gopkg.in/yaml.v3"
 )

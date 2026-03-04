@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/jbogarin/fhir-cli/internal/config"
+	"github.com/Cloverhound/epic-fhir-cli/internal/config"
 )
 
 // ShowJWT generates and displays the full decoded JWT that would be sent

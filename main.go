@@ -1,6 +1,6 @@
 package main
 
-import "github.com/jbogarin/fhir-cli/cmd"
+import "github.com/Cloverhound/epic-fhir-cli/cmd"
 
 func main() {
 	cmd.Execute()

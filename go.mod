@@ -1,4 +1,4 @@
-module github.com/jbogarin/fhir-cli
+module github.com/Cloverhound/epic-fhir-cli
 
 go 1.22
 

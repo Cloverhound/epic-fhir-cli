@@ -5,9 +5,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/jbogarin/fhir-cli/internal/auth"
-	"github.com/jbogarin/fhir-cli/internal/config"
-	"github.com/jbogarin/fhir-cli/internal/fhir"
+	"github.com/Cloverhound/epic-fhir-cli/internal/auth"
+	"github.com/Cloverhound/epic-fhir-cli/internal/config"
+	"github.com/Cloverhound/epic-fhir-cli/internal/fhir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -36,9 +36,14 @@ Configure your credentials with 'fhir-cli config init' to get started.`,
 		auth.VerboseMode = verbose
 		fhir.VerboseMode = verbose
 
-		// Skip config loading for config init command
-		if cmd.Name() == "init" && cmd.Parent() != nil && cmd.Parent().Name() == "config" {
+		// Skip config loading for commands that don't need it
+		switch cmd.Name() {
+		case "version", "update":
 			return nil
+		case "init":
+			if cmd.Parent() != nil && cmd.Parent().Name() == "config" {
+				return nil
+			}
 		}
 		return config.Load(profile)
 	},

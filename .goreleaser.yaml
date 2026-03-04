@@ -6,8 +6,8 @@ builds:
       - CGO_ENABLED=0
     ldflags:
       - -s -w
-      - -X github.com/jbogarin/fhir-cli/cmd.Version={{.Version}}
-      - -X github.com/jbogarin/fhir-cli/cmd.BuildDate={{.Date}}
+      - -X github.com/Cloverhound/epic-fhir-cli/cmd.Version={{.Version}}
+      - -X github.com/Cloverhound/epic-fhir-cli/cmd.BuildDate={{.Date}}
     goos:
       - darwin
       - linux
@@ -30,7 +30,7 @@ checksum:
 
 release:
   github:
-    owner: CloverhoundPS
+    owner: Cloverhound
     name: epic-fhir-cli
   draft: false
   prerelease: auto

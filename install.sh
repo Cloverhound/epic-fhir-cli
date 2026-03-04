@@ -2,9 +2,9 @@
 set -e
 
 # FHIR CLI installer
-# Usage: curl -fsSL https://raw.githubusercontent.com/CloverhoundPS/epic-fhir-cli/main/install.sh | sh
+# Usage: curl -fsSL https://raw.githubusercontent.com/Cloverhound/epic-fhir-cli/main/install.sh | sh
 
-REPO="CloverhoundPS/epic-fhir-cli"
+REPO="Cloverhound/epic-fhir-cli"
 BINARY="fhir-cli"
 INSTALL_DIR="${HOME}/.local/bin"
 

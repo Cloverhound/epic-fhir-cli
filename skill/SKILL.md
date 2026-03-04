@@ -19,17 +19,17 @@ fhir-cli
 
 Install via the one-liner:
 ```bash
-curl -fsSL https://raw.githubusercontent.com/CloverhoundPS/epic-fhir-cli/main/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/Cloverhound/epic-fhir-cli/main/install.sh | sh
 ```
 
 On Windows (PowerShell):
 ```powershell
-irm https://raw.githubusercontent.com/CloverhoundPS/epic-fhir-cli/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/Cloverhound/epic-fhir-cli/main/install.ps1 | iex
 ```
 
 Or install from source:
 ```bash
-git clone https://github.com/CloverhoundPS/epic-fhir-cli.git
+git clone https://github.com/Cloverhound/epic-fhir-cli.git
 cd epic-fhir-cli
 make install
 ```
