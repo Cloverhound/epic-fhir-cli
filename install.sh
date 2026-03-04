@@ -34,7 +34,7 @@ fi
 echo "Latest version: v${VERSION}"
 
 # Download
-TARBALL="${BINARY}_${VERSION}_${OS}_${ARCH}.tar.gz"
+TARBALL="epic-fhir-cli_${VERSION}_${OS}_${ARCH}.tar.gz"
 URL="https://github.com/${REPO}/releases/download/v${VERSION}/${TARBALL}"
 
 TMPDIR=$(mktemp -d)

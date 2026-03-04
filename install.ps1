@@ -26,7 +26,7 @@ if (-not $Version) {
 Write-Host "Latest version: v$Version"
 
 # Download
-$ZipName = "fhir-cli_${Version}_windows_${Arch}.zip"
+$ZipName = "epic-fhir-cli_${Version}_windows_${Arch}.zip"
 $Url = "https://github.com/$Repo/releases/download/v$Version/$ZipName"
 
 $TmpDir = New-Item -ItemType Directory -Path (Join-Path $env:TEMP "fhir-cli-install-$(Get-Random)")
