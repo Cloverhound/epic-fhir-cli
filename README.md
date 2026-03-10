@@ -2,7 +2,7 @@
 
 A command-line tool for querying Epic's FHIR R4 APIs using OAuth2 backend authentication.
 
-> **Notice:** This is an open source library provided as-is with limited support. We are not responsible for how you use this tool. As it interacts with Electronic Health Record (EHR) systems, it is your responsibility to ensure that your use complies with all applicable regulations, policies, and standards governing access to and handling of health data.
+> **Notice:** This is an open source library provided as-is with limited support. As it interacts with Electronic Health Record (EHR) systems, it is your responsibility to ensure that your use complies with all applicable regulations, policies, and standards governing access to and handling of health data.
 
 ## Install
 
